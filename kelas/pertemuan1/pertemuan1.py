@@ -1,19 +1,20 @@
-
-
 class Hero:
     jumlahHero = 0
     def __init__(self, name, hp, armor, attack):
-        self.name = name
-        self.hp = hp
+        self.__name = name
+        self._hp = hp
         self.armor = armor
         self.attack = attack
-        print('nama saya')
-    def hpUp(self, up):
-        self.hp += up
+    
+    @property
+    def getName(self):
+        return self.__name
+    
+    
+    
+sniper = Hero('sniper', 100, 4, 15)
 
-roger = Hero('Roger', 100, 4, 15)
-print(roger.__dict__)
-roger.hpUp(25)
-print(roger.__dict__)
-print(roger.name)
-sniper = Hero('Sniper', 50, 5, 30)
+print(sniper.armor)
+print(sniper.__dict__)
+print(sniper.getName)
+# print(sniper.hp)
