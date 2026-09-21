@@ -47,6 +47,6 @@ C. Class Ruangan
 
 D. Pengujian Program
     Pada pengujian program bagian class BarangInventaris, pembuatan objek menggunakan teknik biasa dan memanggil method dictionary. Lalu menampilkan info setiap objek dan total barang. Selanjutnya memanggil method tambah dan kurangi. Lalu memanggil setter di b1.stok dan cukup memperbarui nilai layaknya memperbarui atribut biasa. Kemudian menguji setiap validasi value error pada setter dan method instance biasa. Terakhir menguji method static dengan memasukkan nilai eror yang akan ditangkap raise, yaitu menambah karakter spasi pada atribut kode.
-    Pengujian pada class Karyawan juga kurang lebih sama, memanggil setiap method dan menguji nilainya. Khusus untuk class Ruangan, dapat dilihat method tambah_barang menggunakan objek dari class BarangInventaris (b1 dan b2) untuk ditambah ke dalam list. Pada baris "total stok" adalah jumlah stok pada setiap ruangan. Nilai penanggung_jawab juga berupa dan harus objek dari class Karyawan (k1 dan k2). Method-method yang tersisa dipanggil dan diuji validasi nilainya.
+    Pengujian pada class Karyawan juga kurang lebih sama, memanggil setiap method dan menguji nilainya. Khusus untuk class Ruangan, dapat dilihat method tambah_barang menggunakan objek dari class BarangInventaris (b1 dan b2) untuk ditambah ke dalam list. Pada baris "total stok" adalah jumlah stok pada setiap ruangan. Nilai penanggung_jawab juga berupa dan harus objek dari class Karyawan (k1 dan k2). Method-method yang tersisa dipanggil dan diuji validasi error-nya.
 
    
