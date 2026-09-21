@@ -28,7 +28,13 @@ Daftar Class:
        - lantai        ---|
        - daftar_barang ---|
        - penanggung_jawab ---> Instance Private
-   
+
+Ketiga class memiliki atribut class yang serupa yaitu jumlah objek ketika dibuat. Ketiga atribut class tersebut diiniisialisasikan dengan nilai awal nol dan terus bertambah seiring dengan menambahnya objek. 
+
+Penjelasan Program:
+A. Class BarangInventaris
+    Class ini memiliki 4 atribut instance dengan atribut 'stok' sebagai atribut private, stok yang dimaksud disini adalah jumlah untuk satu jenis barang, nilai awal atribut ini adalah nol. Dekorator @property memungkinkan kita untuk mengubah sebuah method (fungsi dalam class) agar bisa diakses seperti atribut biasa, dalam hal ini tidak perlu lagi menggunakan tanda kurung seperti penggunaan fungsi pada umumnya.
+    Kemudian ada getter berfungsi untuk membaca dan mengembalikan nilai private serta setter untuk mengubah dan memberi validasi pada nilai tersebut. Dalam class ini stok adalah atribut private, maka buat sebuah getter. Lalu buat setter dengan nama yang sama dengan setter-nya yang berfungsi memperbarui nilai lama. 
 
 
    
