@@ -32,7 +32,7 @@ class BarangInventaris:
     @stok.setter
     def stok(self, stok_baru):
         if not isinstance(stok_baru, int) or stok_baru < 0:
-            raise ValueError("Stok harus bilangan bulat dan tidak boleh di bawah nol!")
+            raise ValueError("Stok harus bilangan bulat!")
         self.__stok = stok_baru
 
     # method instance
@@ -68,9 +68,12 @@ class BarangInventaris:
 
 class Karyawan:
     jumlah_karyawan = 0
+    
     def __init__(self, nip, nama, divisi):
+        
         if not Karyawan.validasi_nip(nip):
             raise ValueError ('Format nip tidak valid!')
+        
         self.nip = nip
         self.nama = nama
         self.__divisi = ''

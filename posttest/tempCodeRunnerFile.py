@@ -1,1 +1,0 @@
-b1.kurangi_stok(12)
