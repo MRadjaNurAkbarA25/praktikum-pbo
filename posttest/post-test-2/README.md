@@ -124,4 +124,53 @@ class Karyawan:
 Sekarang beralih ke subclass atau child class dari Karyawan. Terdapat dua subclass dari Karyawan yaitu Staff dan Manager.
 
 1. Subclass Staff
-  Subclass Staff memiliki semua atribut yang dimiliki parent-nya dengan tambahan atribut unik yaitu jam_lembur. Atribut ini akan menghitung gaji_pokok-nya nanti. 
+  Subclass Staff memiliki semua atribut yang dimiliki parent-nya dengan tambahan atribut unik yaitu jam_lembur. Atribut ini dan atribut kelas TARIF_LEMBUR akan digunakan untuk menghitung gaji_pokok Staff. Konstruktor milik superclass (Karyawan) dipanggil menggunakan super() sehingga subclass hanya perlu mengisi atribut miliknya yakni jam_lembur.
+  Subclass Staff juga memiliki 3 method yang didefinisikan ulang dengan nama dan parameter yang sama seperti pada superclass-nya, method ini disebut method overriding. Meski begitu, logika dan perilakunya berbeda. Pada Staff, method hitung_gaji() untuk menghitung gaji memiliki operasi gaji_pokok + (jam_lembur x TARIF_LEMBUR), membedakannya dari superclass dan subclass lain. Sementara method info() dan dari_dict() kurang lebih sama, perbedaan berada di penambahan atribut khusus subclass Staff.
+
+class Staff(Karyawan):
+    TARIF_LEMBUR = 20000
+    
+    def __init__(self, nip, nama, divisi, gaji_pokok, jam_lembur):
+        super().__init__(nip, nama, divisi, gaji_pokok)
+        self.jam_lembur = jam_lembur
+    
+    def hitung_gaji(self):
+        return self._gaji_pokok + (self.jam_lembur * Staff.TARIF_LEMBUR)
+
+    def info(self):
+        print(f'{self.nip} {self.nama} - Divisi {self.divisi} - Jam lembur {self.jam_lembur} jam')
+   
+    @classmethod
+    def dari_dict(cls, data):               
+        return cls(data['nip'], data['nama'], data['divisi'],
+            data['gaji_pokok'], data['jam_lembur'])
+
+2. Subclass Manager
+  Subclass Manager juga merupakan subclass dari Karyawan. Menggunakan super() untuk memanggil konstruktor miliki superclass-nya, subclass ini memiliki atribut unik yaitu tunjangan_jabatan, atribut ini dibuat sebagai atribut protected yang diisi melalui setter tunjangan_jabatan. Untuk method overriding hitung_gaji(), gaji_pokok ditambah dengan tunjangan_jabatan sementara method overriding lain (info() dan dari_dict()) cukup menambah atribut tunjangan_gaji pada isinya.
+
+class Manager(Karyawan):
+    def __init__(self, nip, nama, divisi, gaji_pokok, tunjangan_jabatan):
+        super().__init__(nip, nama, divisi, gaji_pokok)
+        self.__tunjangan_jabatan = 0
+        self.tunjangan_jabatan = tunjangan_jabatan
+    
+    @property
+    def tunjangan_jabatan(self):
+        return self.__tunjangan_jabatan
+        
+    @tunjangan_jabatan.setter
+    def tunjangan_jabatan(self, nilai):
+        if not isinstance(nilai, int) or nilai < 0:
+            raise ValueError('Tunjangan harus bilangan bulat!')
+        self.__tunjangan_jabatan = nilai
+    
+    def hitung_gaji(self):
+        return self.gaji_pokok + self.__tunjangan_jabatan
+        
+    def info(self):
+        print(f'{self.nip} {self.nama} - Divisi {self.divisi} - Tunjangan jabatan: Rp.{self.__tunjangan_jabatan}')
+        
+    @classmethod
+    def dari_dict(cls, data):
+        return cls(data['nip'], data['nama'], data['divisi'],
+            data['gaji_pokok'], data['tunjangan_jabatan'])
