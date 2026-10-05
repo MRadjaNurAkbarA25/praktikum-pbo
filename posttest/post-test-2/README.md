@@ -96,3 +96,32 @@ class BarangInventaris:
 Objek RiwayatStok tidak dapat diakses dari luar karena bersifat private dan tidak disediakan getter yang mengembalikan objeknya. Akibatnya, riwayat hanya dimiliki oleh satu barang dan tidak dapat dibagikan ke barang lain. Riwayat hanya dapat dilihat lewat method tampilkan_riwayat(). Berbeda dengan agregasi, objek bagian pada komposisi dibuat oleh objek induknya sendiri dan tidak dapat digunakan oleh objek lain.
 
 B. Penerapan Inheritance
+  Inheritance merupakan mekanisme di mana sebuah kelas baru (subclass) mewarisi atribut dan method dari kelas yang sudah ada (superclass). Subclass tidak perlu menulis ulang apa yang sudah dimiliki superclass, dan hanya menambahkan atau mengubah hal yang membedakannya. 
+  Untuk memudahkan penerapan Inheritance, pada kelas Karyawan ditambah atribut baru yaitu _gaji_pokok bersifat atribut protected, diisi melalui setter gaji_pokok. Kemudian method baru hitung_gaji() yang mengembalikan nilai gaji_pokok.
+
+class Karyawan:
+    jumlah_karyawan = 0
+    
+    def __init__(self, nip, nama, divisi, gaji_pokok):
+        
+        ...
+        self.gaji_pokok = gaji_pokok
+
+    ...
+    @property
+    def gaji_pokok(self):
+        return self._gaji_pokok
+    
+    @gaji_pokok.setter
+    def gaji_pokok(self, gaji_pokok_baru):
+        if not isinstance(gaji_pokok_baru, int) or gaji_pokok_baru < 0:
+            raise ValueError("Gaji harus bilangan bulat!")
+        self._gaji_pokok = gaji_pokok_baru
+    
+    def hitung_gaji(self):
+        return self._gaji_pokok
+
+Sekarang beralih ke subclass atau child class dari Karyawan. Terdapat dua subclass dari Karyawan yaitu Staff dan Manager.
+
+1. Subclass Staff
+  Subclass Staff memiliki semua atribut yang dimiliki parent-nya dengan tambahan atribut unik yaitu jam_lembur. Atribut ini akan menghitung gaji_pokok-nya nanti. 
