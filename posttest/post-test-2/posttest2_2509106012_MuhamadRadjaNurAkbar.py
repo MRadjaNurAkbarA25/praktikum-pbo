@@ -310,13 +310,21 @@ s1 = Staff('S001', 'Memet', 'IT', 5000000, 10)
 s1.info()
 print(f'Gaji : {s1.hitung_gaji()}') 
 print(f'Gaji pokok : {s1.gaji_pokok}')
+s1.info()
+
+print('\n')
 
 print('Role Manager')
 m1 = Manager('M001', 'Rina', 'IT', 8000000, 1500000)
 m1.info()
-print(f'Gaji pokok: {m1.hitung_gaji()}')
+print(f'Gaji : {m1.hitung_gaji()}')
 print(f'Gaji pokok : {m1.gaji_pokok}')
 
+m2 = Manager.dari_dict(
+    {'nip': 'M002', 'nama': 'Lucy', 'divisi': 'Marketing', 'gaji_pokok': 5000000, 'tunjangan_jabatan': 50000}
+)
+m2.info()
+print(f'Gaji : {m2.hitung_gaji()}')
 
 print('\n')
 print('Data awal')
@@ -402,4 +410,3 @@ print('\n')
 print('Validasi format kode ruangan')
 print('Kode = R003 ->', Ruangan.validasi_kode('R003'))
 print('Kode = R 003 ->', Ruangan.validasi_kode('R 003'))
-
