@@ -290,3 +290,16 @@ Output operator overloading
 M. Penerapan Solid
 1. Open/Closed Principle (OCP) Kelas Magang ditambahkan sebagai subclass baru tanpa mengubah kode Karyawan, Ruangan, maupun loop penggajian di file utama. Karena semua kode lama bergantung pada method hitung_gaji() dan info(), objek Magang langsung bisa dipakai di loop slip gaji dan sebagai penanggung jawab ruangan.
 2. Dependency Inversion Principle (DIP) Kelas Ruangan bergantung pada abstraksi Karyawan, bukan pada kelas konkret Staff atau Manager. Penanggung jawab diberikan dari luar lewat constructor (dependency injection), sehingga Ruangan bisa menerima jenis karyawan apa pun tanpa diubah.
+
+N. Relasi UML
+<img width="912" height="684" alt="DiagramRelasi drawio" src="https://github.com/user-attachments/assets/23197565-f175-4fbb-8803-bb5a52dcf83d" />
+
+Diagram memperlihatkan tiga relasi yang wajib beserta pewarisan. Ketiga relasi benar-benar ada di kode program.
+
+1. Asosiasi: dari Ruangan ke Karyawan Ruangan menyimpan referensi satu Karyawan sebagai penanggung jawab lewat atribut private __penanggung_jawab yang diisi setter. Objek Karyawan dibuat di luar Ruangan dan hanya dikenal, tidak dimiliki, sehingga hubungannya paling longgar.
+2. Agregasi: dari Ruangan ke BarangInventaris Ruangan menampung banyak BarangInventaris di list daftar_barang lewat method tambah_barang(). Dipilih agregasi karena barang dibuat di luar Ruangan, bisa berada di lebih dari satu ruangan (pada program, Laptop b1 masuk ke r1 dan r2), dan tetap ada walaupun ruangannya dihapus.
+3. Komposisi: dari BarangInventaris ke RiwayatStok BarangInventaris membuat sendiri objek RiwayatStok di dalam constructor dan menyimpannya di atribut private __riwayat. Dipilih komposisi karena riwayat hanya ada untuk satu barang, tidak diterima dari luar, tidak bisa dibagikan ke barang lain, dan tidak berguna tanpa barangnya.
+
+Perbedaan agregasi dan komposisi terletak pada siapa yang membuat objek bagian dan apakah bagian itu bisa hidup sendiri. Pada agregasi, bagian dibuat di luar dan tetap hidup mandiri. Pada komposisi, bagian dibuat oleh induknya dan tidak berdiri sendiri.
+
+4. Pewarisan: dari Staff, Manager, dan Magang ke Karyawan Ketiga subclass mewarisi kelas abstrak Karyawan dan meng-override hitung_gaji() dan info().
