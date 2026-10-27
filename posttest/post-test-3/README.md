@@ -53,3 +53,241 @@ def cek_teks(nilai, label):
 
 def rupiah(nilai):
     return 'Rp' + f'{nilai:,}'.replace(',', '.')
+
+C. File riwayat_stok.py
+  Kelas RiwayatStok menyimpan catatan perubahan stok. Isinya sama persis dengan posttest 2, hanya dipindah ke file sendiri. Kelas ini adalah bagian komposisi: objeknya dibuat dan dimiliki oleh BarangInventaris.
+
+  Constructor __init__ ditambahkan tanpa parameter tambahan, karena riwayat selalu dimulai kosong. Pada baris berikutnya, atribut __catatan adalah atribut private berupa list kosong. Method catat() adalah method instance karena menggunakan .self, method ini menambah 1 catatan, dengan aksi berupa menambah atau mengurangi serta jumlah yang dioperasikan. Method tampilkan() menampilkan seluruh isi catatan dengan cara perulangan for, setiap baris diawali '-'.
+
+class RiwayatStok:
+    def __init__(self):
+        self.__catatan = []                # ◄◄ private
+
+    def catat(self, aksi, jumlah):
+        self.__catatan.append(f'{aksi} {jumlah}')
+
+    def tampilkan(self):
+        for c in self.__catatan:
+            print(' -', c)
+
+D. File barang_inventaris.py
+  File ini berisi kelas BarangInventaris. Perubahan yang terjadi sejak posttest kedua adalah sebagai berikut.
+
+  Mengimport fungsi dan method pada .utils.py dan riwayat_stok.py. Membuat atr kelas jumlah_barang dengan nilai awal 0 dan _kode_terpakai dengan nilai adalah set kosong.
+
+  Kode barang harus unik Ditambahkan atribut kelas _kode_terpakai berupa set untuk menyimpan kode yang sudah dipakai. Jika kode yang sama dipakai lagi, program melempar ValueError. Kode baru didaftarkan di akhir constructor, supaya kode hanya tercatat jika semua validasi sudah lolos.
+
+_kode_terpakai = set()
+
+if kode in BarangInventaris._kode_terpakai:
+    raise ValueError(f'Kode {kode} sudah dipakai barang lain!')
+
+  Berikutnya mengisi atr instance, atr nama dan kategori divalidasi dengan cek_teks() supaya tidak kosong.
+
+self.nama = cek_teks(nama, 'Nama barang')       
+self.kategori = cek_teks(kategori, 'Kategori')
+
+  Urutan __riwayat dan __stok ditukar Pada posttest kedua, urutannya __stok lalu __riwayat. Sekarang __riwayat dibuat lebih dulu. Alasannya, baris self.stok = stok di constructor tidak mengisi atribut secara langsung, tetapi menjalankan setter. Setter stok sekarang memanggil self.__riwayat.catat(), sehingga jika __riwayat belum ada akan terjadi AttributeError. Objek RiwayatStok dibuat di dalam constructor, bukan diterima dari parameter, sehingga relasi komposisi tetap terjaga.
+
+self.__riwayat = RiwayatStok()
+self.__stok = 0
+self.stok = stok
+
+  Property stok (getter dan setter) Atribut __stok bersifat private sehingga tidak bisa diakses dari luar. Getter dan setter dengan @property menjadi satu-satunya jalan untuk membaca dan mengubahnya, tetapi cara pemakaiannya tetap seperti atribut biasa (b1.stok dan b1.stok = 8). Getter mengembalikan __stok. Setter memvalidasi nilai dengan cek_bulat() lebih dulu, baru kemudian menyimpan dan mencatat 'atur' ke riwayat. Jika nilai salah, ValueError dilempar sebelum penyimpanan dan pencatatan, sehingga stok tidak berubah. Constructor juga memakai setter, jadi stok awal ikut divalidasi.
+
+@property
+def stok(self):
+    return self.__stok
+
+@stok.setter
+def stok(self, stok_baru):
+    self.__stok = cek_bulat(stok_baru, 'Stok')
+    self.__riwayat.catat('atur', stok_baru)
+
+  Validasi jumlah lewat _cek_jumlah() Method statis _cek_jumlah() dipakai oleh tambah_stok() dan kurangi_stok() untuk menolak nilai nol, negatif, desimal, dan True/False. Pada posttest kedua, nilai desimal seperti 2.5 masih lolos. Digunakan pada method tambah_stok() dan kurangi_stok(). 
+
+@staticmethod
+def _cek_jumlah(n):
+    if not isinstance(n, int) or isinstance(n, bool) or n <= 0:
+        raise ValueError('Jumlah harus bilangan bulat lebih dari nol!')
+
+def tambah_stok(self, n):
+    BarangInventaris._cek_jumlah(n)                     # PERUBAHAN: validasi lewat helper
+    self.__stok += n
+    self.__riwayat.catat('tambah', n)
+
+def kurangi_stok(self, n):
+    BarangInventaris._cek_jumlah(n)                     # PERUBAHAN
+    if n > self.__stok:
+        raise ValueError(f'Stok {self.nama} tidak cukup!')
+    self.__stok -= n
+    self.__riwayat.catat('kurang', n)
+
+  Operator overloading __str__ Method str() ditambahkan untuk menentukan teks yang tampil ketika objek di-print. Method info() sekarang cukup print(self) yang otomatis memanggil str(), sehingga format teks barang hanya ditulis di satu tempat.
+
+def info(self):
+    print(self)
+
+def __str__(self):
+    return f'[{self.kode}] {self.nama} ({self.kategori}) - Stok: {self.__stok}'
+
+
+E.File karyawan.py
+  File ini berisi kelas Karyawan yang sekarang menjadi abstract class. Perubahan yang terjadi sejak posttest kedua adalah sebagai berikut.
+
+  Mewarisi ABC Kelas Karyawan sekarang mewarisi ABC dari modul abc. Selama masih ada abstract method yang belum di-override, Python menolak pembuatan objeknya dengan TypeError.
+  Dua abstract method Method hitung_gaji() dan info() diberi dekorator @abstractmethod. Sebelumnya keduanya method biasa. Isinya hanya pass karena yang menghitung adalah subclass masing-masing, sehingga setiap subclass wajib mengimplementasikannya.
+
+class Karyawan(ABC):
+
+    @abstractmethod
+    def hitung_gaji(self):
+        pass
+
+    @abstractmethod
+    def info(self):
+        pass
+
+  Method konkret cetak_slip_gaji() Method ini ditulis sekali di Karyawan dan dipakai bersama oleh semua subclass. Di dalamnya, self.info() dan self.hitung_gaji() otomatis memakai versi milik subclass yang sedang dipakai. 
+
+def cetak_slip_gaji(self):
+    self.info()
+    print(f'   Gaji pokok: {rupiah(self._gaji_pokok)} | Total gaji: {rupiah(self.hitung_gaji())}')
+
+  Method _info_dasar() Method ini mengembalikan teks nip, nama, dan divisi yang sama untuk semua subclass. Karena __divisi bersifat private, subclass tidak bisa mengaksesnya langsung, sehingga mereka memanggil _info_dasar().
+  Operator overloading __lt__ Method lt() membandingkan dua karyawan berdasarkan hasil hitung_gaji(). Dengan ini, sorted() bisa mengurutkan daftar karyawan tanpa parameter key, dan perbandingan seperti s1 < m1 bisa dipakai.
+
+  def __lt__(self, lain):
+    return self.hitung_gaji() < lain.hitung_gaji()
+
+  Perubahan lainnya NIP harus unik (atribut kelas _nip_terpakai, sama seperti kode pada BarangInventaris). Setter divisi dan gaji_pokok memakai cek_teks() dan cek_bulat(). Method dari_dict() dihapus dari kelas ini karena kelas abstrak tidak bisa dibuat langsung, dan setiap subclass memiliki dari_dict() sendiri.
+
+F. File staff.py
+  Kelas Staff adalah subclass dari Karyawan. Atribut uniknya jam_lembur sekarang bersifat private dengan property agar bisa divalidasi. Constructor memanggil super().init() untuk mengisi atribut milik Karyawan, sehingga Staff hanya mengurus atribut miliknya sendiri. Atribut jam_lembur diisi sebelum super().init(). Alasannya, NIP baru dicatat di akhir constructor Karyawan. Jika jam lembur salah dan baru dicek sesudahnya, NIP sudah terlanjur terdaftar padahal objeknya gagal dibuat. Method hitung_gaji() dan info() merupakan hasil override dari abstract method Karyawan. Gaji Staff dihitung dari gaji pokok ditambah jam_lembur dikali TARIF_LEMBUR.
+
+class Staff(Karyawan):
+    TARIF_LEMBUR = 20000
+
+    def __init__(self, nip, nama, divisi, gaji_pokok, jam_lembur):
+        self.jam_lembur = jam_lembur
+        super().__init__(nip, nama, divisi, gaji_pokok)
+
+    def hitung_gaji(self):
+        return self._gaji_pokok + (self.__jam_lembur * Staff.TARIF_LEMBUR)
+
+    def info(self):
+        print(f'{self._info_dasar()} - Staff, lembur {self.__jam_lembur} jam')
+
+G. File manager.py
+  Kelas Manager adalah subclass kedua dari Karyawan. Polanya sama dengan Staff. Atribut uniknya tunjangan_jabatan diisi sebelum super().init() dan divalidasi di setter dengan cek_bulat(). Baris self.__tunjangan_jabatan = 0 dari versi lama tidak diperlukan lagi. Method hitung_gaji() menjumlahkan _gaji_pokok dengan tunjangan jabatan, sedangkan info() mencetak data dasar dan tunjangan dalam format rupiah.
+
+class Manager(Karyawan):
+    def __init__(self, nip, nama, divisi, gaji_pokok, tunjangan_jabatan):
+        self.tunjangan_jabatan = tunjangan_jabatan
+        super().__init__(nip, nama, divisi, gaji_pokok)
+
+    def hitung_gaji(self):
+        return self._gaji_pokok + self.__tunjangan_jabatan
+
+    def info(self):
+        print(f'{self._info_dasar()} - Manager, tunjangan {rupiah(self.__tunjangan_jabatan)}')
+
+H. File magang.py
+  File ini seluruhnya baru. Kelas Magang adalah subclass ketiga dari Karyawan dengan atribut unik durasi_bulan yang bersifat private dan minimal 1 bulan. Anak magang hanya menerima gaji pokok, sehingga hitung_gaji() langsung mengembalikan _gaji_pokok. Kelas ini ditambahkan tanpa mengubah Karyawan, Ruangan, maupun loop penggajian di file utama, dan semuanya tetap berjalan. Hal ini merupakan penerapan prinsip Open/Closed pada SOLID.
+
+class Magang(Karyawan):
+    def __init__(self, nip, nama, divisi, gaji_pokok, durasi_bulan):
+        self.durasi_bulan = durasi_bulan
+        super().__init__(nip, nama, divisi, gaji_pokok)
+
+    @durasi_bulan.setter
+    def durasi_bulan(self, bulan):
+        if cek_bulat(bulan, 'Durasi magang') == 0:
+            raise ValueError('Durasi magang minimal 1 bulan!')
+        self.__durasi_bulan = bulan
+
+    def hitung_gaji(self):
+        return self._gaji_pokok
+
+    def info(self):
+        print(f'{self._info_dasar()} - Magang {self.__durasi_bulan} bulan')
+
+I. File ruangan.py
+  Kelas Ruangan memegang dua relasi, yaitu asosiasi ke Karyawan lewat penanggung_jawab dan agregasi ke BarangInventaris lewat daftar_barang. Kedua relasi itu tidak berubah sejak posttest kedua. Perubahan yang terjadi adalah sebagai berikut.
+  Kode ruangan harus unik (_kode_terpakai), nama divalidasi dengan cek_teks(), dan lantai divalidasi dengan cek_bulat().
+  Setter penanggung_jawab memeriksa isinya dengan isinstance(nilai, Karyawan), yaitu kelas abstrak, bukan Staff atau Manager. Dengan begitu semua subclass diterima, termasuk Magang yang ditambahkan belakangan.
+  Operator overloading len() ditambahkan sehingga len(ruangan) mengembalikan jumlah jenis barang di dalam ruangan. Method info() memakainya untuk menampilkan jumlah barang.
+
+@penanggung_jawab.setter
+def penanggung_jawab(self, nilai):
+    if not isinstance(nilai, Karyawan):
+        raise ValueError('Penanggung jawab harus objek Karyawan')
+    self.__penanggung_jawab = nilai
+
+def __len__(self):
+    return len(self.daftar_barang)
+
+J. File utama
+  File utama tidak mendefinisikan kelas. Isinya hanya mengimpor kelas dari package models, membuat objek, dan memanggil method untuk mendemonstrasikan semua konsep. Bagian baru dibanding posttest kedua adalah:
+
+  fungsi tampilkan_info() untuk duck typing,
+  pembuktian bahwa abstract class Karyawan tidak bisa diinstansiasi,
+  objek k1 dan k2 yang sekarang berupa Staff dan Manager karena Karyawan tidak bisa dibuat langsung,
+  pembuatan objek Magang,
+  loop slip gaji untuk polimorfisme dan pengurutan dengan sorted() untuk operator overloading,
+  validasi baru (stok desimal, kode barang ganda, jam lembur negatif, NIP ganda),
+  pemanggilan len() pada ruangan,
+  bagian duck typing di akhir program.
+
+from models import (
+    BarangInventaris, Karyawan, Staff, Manager, Magang, Ruangan, rupiah
+)
+
+  Program dijalankan dari dalam folder post-test-3 dengan perintah python posttest3_2509106012_MuhamadRadjaNurAkbar.py.
+
+K. Penerapan Abstraksi
+
+  Abstract class: Karyawan (di karyawan.py), memakai ABC.
+  Abstract method: hitung_gaji() dan info(), keduanya diberi @abstractmethod.
+  Subclass yang mengimplementasikan seluruh abstract method: Staff, Manager, dan Magang.
+  Method konkret: cetak_slip_gaji(), dipakai bersama oleh semua subclass.
+  Konsep inheritance dari posttest sebelumnya tetap dipakai: super().init(...) di setiap subclass, atribut unik tiap subclass (jam_lembur, tunjangan_jabatan, durasi_bulan), atribut protected _gaji_pokok, serta atribut private seperti __divisi, __jam_lembur, dan __tunjangan_jabatan.
+
+  Bukti abstract class tidak bisa diinstansiasi ada di file utama:
+
+try:
+    Karyawan('K000', 'Tes', 'Umum', 1000000)
+except TypeError as e:
+    print('Ditolak:', e)
+
+L. Penerapan Polimorfisme
+  Polimorfisme via pewarisan Method hitung_gaji() dan info() di-override oleh Staff, Manager, dan Magang dengan perilaku berbeda. Ketiganya dipanggil lewat satu loop pada objek yang bercampur di dalam satu list.
+
+daftar_karyawan = [k1, k2, s1, m1, m2, g1]
+for karyawan in daftar_karyawan:
+    karyawan.cetak_slip_gaji()
+
+  Output polimorfisme
+
+  Duck typing Kelas BarangInventaris, Ruangan, dan Manager tidak berhubungan lewat pewarisan, tetapi sama-sama memiliki method info(). Ketiganya dipanggil lewat satu fungsi yang sama, tampilkan_info(), yang tidak mengecek tipe objek.
+
+def tampilkan_info(objek):
+    objek.info()
+
+for objek in [b2, r2, m1]:
+    tampilkan_info(objek)
+
+Output duck typing
+
+Operator overloading
+  str() di BarangInventaris, untuk menentukan teks hasil print(objek).
+  lt() di Karyawan, untuk membandingkan karyawan berdasarkan gaji, dipakai oleh sorted() dan s1 < m1.
+  len() di Ruangan, untuk mengetahui jumlah jenis barang lewat len(ruangan).
+
+Output operator overloading
+
+  Larangan anti-pattern Tidak ada rantai if/elif yang mengecek type() atau string jenis untuk membedakan perilaku objek. Setiap objek menentukan perilakunya sendiri lewat method. Fungsi isinstance hanya dipakai di Ruangan untuk memvalidasi tipe input, bukan untuk membedakan perilaku.
+
+M. Penerapan Solid
+Open/Closed Principle (OCP) Kelas Magang ditambahkan sebagai subclass baru tanpa mengubah kode Karyawan, Ruangan, maupun loop penggajian di file utama. Karena semua kode lama bergantung pada method hitung_gaji() dan info(), objek Magang langsung bisa dipakai di loop slip gaji dan sebagai penanggung jawab ruangan.
+Dependency Inversion Principle (DIP) Kelas Ruangan bergantung pada abstraksi Karyawan, bukan pada kelas konkret Staff atau Manager. Penanggung jawab diberikan dari luar lewat constructor (dependency injection), sehingga Ruangan bisa menerima jenis karyawan apa pun tanpa diubah.
