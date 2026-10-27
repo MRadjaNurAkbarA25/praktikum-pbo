@@ -23,3 +23,10 @@ posttest/post-test-3/
     ├── manager.py             ← Manager
     ├── magang.py              ← Magang
     └── ruangan.py             ← Ruangan
+
+  Dalam laporan ini, saya akan menjelaskan setiap file, mulai dari yang baru hingga perubahan apa yang ada pada file sejak posttest kedua.
+
+  A. File __init__.py
+    File ini tidak punya fungsi atau kelas. Tugasnya menjadikan folder models sebuah package Python dan mengumpulkan semua kelas, sehingga file utama cukup menulis from models import Staff, Ruangan, rupiah. Pada baris:
+
+    from .utils import rupiah
