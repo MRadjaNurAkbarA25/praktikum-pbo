@@ -26,7 +26,30 @@ posttest/post-test-3/
 
   Dalam laporan ini, saya akan menjelaskan setiap file, mulai dari yang baru hingga perubahan apa yang ada pada file sejak posttest kedua.
 
-  A. File __init__.py
-    File ini tidak punya fungsi atau kelas. Tugasnya menjadikan folder models sebuah package Python dan mengumpulkan semua kelas, sehingga file utama cukup menulis from models import Staff, Ruangan, rupiah. Pada baris:
+A. File __init__.py
+  File ini tidak punya fungsi atau kelas. Tugasnya menjadikan folder models sebuah package Python dan mengumpulkan semua kelas, sehingga file utama cukup menulis from models import Staff, Ruangan, rupiah. Pada baris:
 
-    from .utils import rupiah
+from .utils import rupiah
+
+  Titik mengacu pada folder models itu sendiri. Hanya mengimpor rupiah karena fungsi lain pada .utils hanya dipakai di dalam kelas. Sementara itu, baris-baris seterusnya mengimpor kelas-kelas lain. Jika menggunakan asterisks (*) atau mengimpor semua yang ada di models, daftar nama di dalam __all__ akan terikut.
+
+B. File utils.py
+  File ini berisi fungsi pembantu, 2 diantara 3 fungsi merupakan fungsi validasi yang dipakai di setiap setter. Jadi tidak perlu menulis validasi yang sama terus-menerus. Fungsi cek_bulat() memastikan suatu nilai merupakan bilangan bulat dan tidak negatif. Digunakan untuk menjaga angka adalah bulat dalam operasi matematika dan lain-lain.
+
+def cek_bulat(nilai, label):
+    # bool adalah turunan int (True == 1), jadi ditolak secara eksplisit
+    if not isinstance(nilai, int) or isinstance(nilai, bool) or nilai < 0:
+        raise ValueError(f'{label} harus bilangan bulat dan tidak boleh negatif!')
+    return nilai
+
+  Fungsi cek_teks() memastikan nilai bertipe string, atau jika kosong setelah strip() (spasi di awal dan akhir dibuang, sehingga '   ' ikut ditolak).
+
+def cek_teks(nilai, label):
+    if not isinstance(nilai, str) or nilai.strip() == '':
+        raise ValueError(f'{label} tidak boleh kosong!')
+    return nilai
+
+  Fungsi rupiah() berfungsi untuk memodelkan format uang rupiah. Bagian f'{nilai:,}' memberi pemisah ribuan koma. Bagian .replace mengganti koma menjadi titik yang merupakan gaya pemisah di Indonesia.
+
+def rupiah(nilai):
+    return 'Rp' + f'{nilai:,}'.replace(',', '.')
