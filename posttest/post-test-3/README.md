@@ -135,8 +135,8 @@ def __str__(self):
 E.File karyawan.py
   File ini berisi kelas Karyawan yang sekarang menjadi abstract class. Perubahan yang terjadi sejak posttest kedua adalah sebagai berikut.
 
-  Mewarisi ABC Kelas Karyawan sekarang mewarisi ABC dari modul abc. Selama masih ada abstract method yang belum di-override, Python menolak pembuatan objeknya dengan TypeError.
-  Dua abstract method Method hitung_gaji() dan info() diberi dekorator @abstractmethod. Sebelumnya keduanya method biasa. Isinya hanya pass karena yang menghitung adalah subclass masing-masing, sehingga setiap subclass wajib mengimplementasikannya.
+1. Mewarisi ABC Kelas Karyawan sekarang mewarisi ABC dari modul abc. Selama masih ada abstract method yang belum di-override, Python menolak pembuatan objeknya dengan TypeError.
+2. Dua abstract method Method hitung_gaji() dan info() diberi dekorator @abstractmethod. Sebelumnya keduanya method biasa. Isinya hanya pass karena yang menghitung adalah subclass masing-masing, sehingga setiap   subclass wajib mengimplementasikannya.
 
 class Karyawan(ABC):
 
@@ -148,19 +148,19 @@ class Karyawan(ABC):
     def info(self):
         pass
 
-  Method konkret cetak_slip_gaji() Method ini ditulis sekali di Karyawan dan dipakai bersama oleh semua subclass. Di dalamnya, self.info() dan self.hitung_gaji() otomatis memakai versi milik subclass yang sedang dipakai. 
+3. Method konkret cetak_slip_gaji() Method ini ditulis sekali di Karyawan dan dipakai bersama oleh semua subclass. Di dalamnya, self.info() dan self.hitung_gaji() otomatis memakai versi milik subclass yang sedang dipakai. 
 
 def cetak_slip_gaji(self):
     self.info()
     print(f'   Gaji pokok: {rupiah(self._gaji_pokok)} | Total gaji: {rupiah(self.hitung_gaji())}')
 
-  Method _info_dasar() Method ini mengembalikan teks nip, nama, dan divisi yang sama untuk semua subclass. Karena __divisi bersifat private, subclass tidak bisa mengaksesnya langsung, sehingga mereka memanggil _info_dasar().
-  Operator overloading __lt__ Method lt() membandingkan dua karyawan berdasarkan hasil hitung_gaji(). Dengan ini, sorted() bisa mengurutkan daftar karyawan tanpa parameter key, dan perbandingan seperti s1 < m1 bisa dipakai.
+4. Method _info_dasar() Method ini mengembalikan teks nip, nama, dan divisi yang sama untuk semua subclass. Karena __divisi bersifat private, subclass tidak bisa mengaksesnya langsung, sehingga mereka memanggil _info_dasar().
+5. Operator overloading __lt__ Method lt() membandingkan dua karyawan berdasarkan hasil hitung_gaji(). Dengan ini, sorted() bisa mengurutkan daftar karyawan tanpa parameter key, dan perbandingan seperti s1 < m1 bisa dipakai.
 
   def __lt__(self, lain):
     return self.hitung_gaji() < lain.hitung_gaji()
 
-  Perubahan lainnya NIP harus unik (atribut kelas _nip_terpakai, sama seperti kode pada BarangInventaris). Setter divisi dan gaji_pokok memakai cek_teks() dan cek_bulat(). Method dari_dict() dihapus dari kelas ini karena kelas abstrak tidak bisa dibuat langsung, dan setiap subclass memiliki dari_dict() sendiri.
+6. Perubahan lainnya NIP harus unik (atribut kelas _nip_terpakai, sama seperti kode pada BarangInventaris). Setter divisi dan gaji_pokok memakai cek_teks() dan cek_bulat(). Method dari_dict() dihapus dari kelas ini karena kelas abstrak tidak bisa dibuat langsung, dan setiap subclass memiliki dari_dict() sendiri.
 
 F. File staff.py
   Kelas Staff adalah subclass dari Karyawan. Atribut uniknya jam_lembur sekarang bersifat private dengan property agar bisa divalidasi. Constructor memanggil super().init() untuk mengisi atribut milik Karyawan, sehingga Staff hanya mengurus atribut miliknya sendiri. Atribut jam_lembur diisi sebelum super().init(). Alasannya, NIP baru dicatat di akhir constructor Karyawan. Jika jam lembur salah dan baru dicek sesudahnya, NIP sudah terlanjur terdaftar padahal objeknya gagal dibuat. Method hitung_gaji() dan info() merupakan hasil override dari abstract method Karyawan. Gaji Staff dihitung dari gaji pokok ditambah jam_lembur dikali TARIF_LEMBUR.
@@ -214,9 +214,9 @@ class Magang(Karyawan):
 
 I. File ruangan.py
   Kelas Ruangan memegang dua relasi, yaitu asosiasi ke Karyawan lewat penanggung_jawab dan agregasi ke BarangInventaris lewat daftar_barang. Kedua relasi itu tidak berubah sejak posttest kedua. Perubahan yang terjadi adalah sebagai berikut.
-  Kode ruangan harus unik (_kode_terpakai), nama divalidasi dengan cek_teks(), dan lantai divalidasi dengan cek_bulat().
-  Setter penanggung_jawab memeriksa isinya dengan isinstance(nilai, Karyawan), yaitu kelas abstrak, bukan Staff atau Manager. Dengan begitu semua subclass diterima, termasuk Magang yang ditambahkan belakangan.
-  Operator overloading len() ditambahkan sehingga len(ruangan) mengembalikan jumlah jenis barang di dalam ruangan. Method info() memakainya untuk menampilkan jumlah barang.
+1. Kode ruangan harus unik (_kode_terpakai), nama divalidasi dengan cek_teks(), dan lantai divalidasi dengan cek_bulat().
+2. Setter penanggung_jawab memeriksa isinya dengan isinstance(nilai, Karyawan), yaitu kelas abstrak, bukan Staff atau Manager. Dengan begitu semua subclass diterima, termasuk Magang yang ditambahkan belakangan.
+3. Operator overloading len() ditambahkan sehingga len(ruangan) mengembalikan jumlah jenis barang di dalam ruangan. Method info() memakainya untuk menampilkan jumlah barang.
 
 @penanggung_jawab.setter
 def penanggung_jawab(self, nilai):
@@ -230,14 +230,14 @@ def __len__(self):
 J. File utama
   File utama tidak mendefinisikan kelas. Isinya hanya mengimpor kelas dari package models, membuat objek, dan memanggil method untuk mendemonstrasikan semua konsep. Bagian baru dibanding posttest kedua adalah:
 
-  fungsi tampilkan_info() untuk duck typing,
-  pembuktian bahwa abstract class Karyawan tidak bisa diinstansiasi,
-  objek k1 dan k2 yang sekarang berupa Staff dan Manager karena Karyawan tidak bisa dibuat langsung,
-  pembuatan objek Magang,
-  loop slip gaji untuk polimorfisme dan pengurutan dengan sorted() untuk operator overloading,
-  validasi baru (stok desimal, kode barang ganda, jam lembur negatif, NIP ganda),
-  pemanggilan len() pada ruangan,
-  bagian duck typing di akhir program.
+  - fungsi tampilkan_info() untuk duck typing,
+  - pembuktian bahwa abstract class Karyawan tidak bisa diinstansiasi,
+  - objek k1 dan k2 yang sekarang berupa Staff dan Manager karena Karyawan tidak bisa dibuat langsung,
+  - pembuatan objek Magang,
+  - loop slip gaji untuk polimorfisme dan pengurutan dengan sorted() untuk operator overloading,
+  - validasi baru (stok desimal, kode barang ganda, jam lembur negatif, NIP ganda),
+  - pemanggilan len() pada ruangan,
+  - bagian duck typing di akhir program.
 
 from models import (
     BarangInventaris, Karyawan, Staff, Manager, Magang, Ruangan, rupiah
@@ -246,12 +246,11 @@ from models import (
   Program dijalankan dari dalam folder post-test-3 dengan perintah python posttest3_2509106012_MuhamadRadjaNurAkbar.py.
 
 K. Penerapan Abstraksi
-
-  Abstract class: Karyawan (di karyawan.py), memakai ABC.
-  Abstract method: hitung_gaji() dan info(), keduanya diberi @abstractmethod.
-  Subclass yang mengimplementasikan seluruh abstract method: Staff, Manager, dan Magang.
-  Method konkret: cetak_slip_gaji(), dipakai bersama oleh semua subclass.
-  Konsep inheritance dari posttest sebelumnya tetap dipakai: super().init(...) di setiap subclass, atribut unik tiap subclass (jam_lembur, tunjangan_jabatan, durasi_bulan), atribut protected _gaji_pokok, serta atribut private seperti __divisi, __jam_lembur, dan __tunjangan_jabatan.
+  - Abstract class: Karyawan (di karyawan.py), memakai ABC.
+  - Abstract method: hitung_gaji() dan info(), keduanya diberi @abstractmethod.
+  - Subclass yang mengimplementasikan seluruh abstract method: Staff, Manager, dan Magang.
+  - Method konkret: cetak_slip_gaji(), dipakai bersama oleh semua subclass.
+  - Konsep inheritance dari posttest sebelumnya tetap dipakai: super().init(...) di setiap subclass, atribut unik tiap subclass (jam_lembur, tunjangan_jabatan, durasi_bulan), atribut protected _gaji_pokok, serta atribut private seperti __divisi, __jam_lembur, dan __tunjangan_jabatan.
 
   Bukti abstract class tidak bisa diinstansiasi ada di file utama:
 
@@ -261,7 +260,7 @@ except TypeError as e:
     print('Ditolak:', e)
 
 L. Penerapan Polimorfisme
-  Polimorfisme via pewarisan Method hitung_gaji() dan info() di-override oleh Staff, Manager, dan Magang dengan perilaku berbeda. Ketiganya dipanggil lewat satu loop pada objek yang bercampur di dalam satu list.
+  1. Polimorfisme via pewarisan Method hitung_gaji() dan info() di-override oleh Staff, Manager, dan Magang dengan perilaku berbeda. Ketiganya dipanggil lewat satu loop pada objek yang bercampur di dalam satu list.
 
 daftar_karyawan = [k1, k2, s1, m1, m2, g1]
 for karyawan in daftar_karyawan:
@@ -269,7 +268,7 @@ for karyawan in daftar_karyawan:
 
   Output polimorfisme
 
-  Duck typing Kelas BarangInventaris, Ruangan, dan Manager tidak berhubungan lewat pewarisan, tetapi sama-sama memiliki method info(). Ketiganya dipanggil lewat satu fungsi yang sama, tampilkan_info(), yang tidak mengecek tipe objek.
+  2. Duck typing Kelas BarangInventaris, Ruangan, dan Manager tidak berhubungan lewat pewarisan, tetapi sama-sama memiliki method info(). Ketiganya dipanggil lewat satu fungsi yang sama, tampilkan_info(), yang tidak mengecek tipe objek.
 
 def tampilkan_info(objek):
     objek.info()
@@ -279,15 +278,15 @@ for objek in [b2, r2, m1]:
 
 Output duck typing
 
-Operator overloading
-  str() di BarangInventaris, untuk menentukan teks hasil print(objek).
-  lt() di Karyawan, untuk membandingkan karyawan berdasarkan gaji, dipakai oleh sorted() dan s1 < m1.
-  len() di Ruangan, untuk mengetahui jumlah jenis barang lewat len(ruangan).
+3. Operator overloading
+  - str() di BarangInventaris, untuk menentukan teks hasil print(objek).
+  - lt() di Karyawan, untuk membandingkan karyawan berdasarkan gaji, dipakai oleh sorted() dan s1 < m1.
+  - len() di Ruangan, untuk mengetahui jumlah jenis barang lewat len(ruangan).
 
 Output operator overloading
 
-  Larangan anti-pattern Tidak ada rantai if/elif yang mengecek type() atau string jenis untuk membedakan perilaku objek. Setiap objek menentukan perilakunya sendiri lewat method. Fungsi isinstance hanya dipakai di Ruangan untuk memvalidasi tipe input, bukan untuk membedakan perilaku.
+4. Larangan anti-pattern Tidak ada rantai if/elif yang mengecek type() atau string jenis untuk membedakan perilaku objek. Setiap objek menentukan perilakunya sendiri lewat method. Fungsi isinstance hanya dipakai di Ruangan untuk memvalidasi tipe input, bukan untuk membedakan perilaku.
 
 M. Penerapan Solid
-Open/Closed Principle (OCP) Kelas Magang ditambahkan sebagai subclass baru tanpa mengubah kode Karyawan, Ruangan, maupun loop penggajian di file utama. Karena semua kode lama bergantung pada method hitung_gaji() dan info(), objek Magang langsung bisa dipakai di loop slip gaji dan sebagai penanggung jawab ruangan.
-Dependency Inversion Principle (DIP) Kelas Ruangan bergantung pada abstraksi Karyawan, bukan pada kelas konkret Staff atau Manager. Penanggung jawab diberikan dari luar lewat constructor (dependency injection), sehingga Ruangan bisa menerima jenis karyawan apa pun tanpa diubah.
+1. Open/Closed Principle (OCP) Kelas Magang ditambahkan sebagai subclass baru tanpa mengubah kode Karyawan, Ruangan, maupun loop penggajian di file utama. Karena semua kode lama bergantung pada method hitung_gaji() dan info(), objek Magang langsung bisa dipakai di loop slip gaji dan sebagai penanggung jawab ruangan.
+2. Dependency Inversion Principle (DIP) Kelas Ruangan bergantung pada abstraksi Karyawan, bukan pada kelas konkret Staff atau Manager. Penanggung jawab diberikan dari luar lewat constructor (dependency injection), sehingga Ruangan bisa menerima jenis karyawan apa pun tanpa diubah.
