@@ -237,7 +237,8 @@ J. File utama
   - loop slip gaji untuk polimorfisme dan pengurutan dengan sorted() untuk operator overloading,
   - validasi baru (stok desimal, kode barang ganda, jam lembur negatif, NIP ganda),
   - pemanggilan len() pada ruangan,
-  - bagian duck typing di akhir program.
+  - bagian duck typing,
+  - kode penerapa SOLID OCP dan DIP di akhir program.
 
 from models import (
     BarangInventaris, Karyawan, Staff, Manager, Magang, Ruangan, rupiah
@@ -288,8 +289,9 @@ Output operator overloading
 4. Larangan anti-pattern Tidak ada rantai if/elif yang mengecek type() atau string jenis untuk membedakan perilaku objek. Setiap objek menentukan perilakunya sendiri lewat method. Fungsi isinstance hanya dipakai di Ruangan untuk memvalidasi tipe input, bukan untuk membedakan perilaku.
 
 M. Penerapan Solid
-1. Open/Closed Principle (OCP) Kelas Magang ditambahkan sebagai subclass baru tanpa mengubah kode Karyawan, Ruangan, maupun loop penggajian di file utama. Karena semua kode lama bergantung pada method hitung_gaji() dan info(), objek Magang langsung bisa dipakai di loop slip gaji dan sebagai penanggung jawab ruangan.
-2. Dependency Inversion Principle (DIP) Kelas Ruangan bergantung pada abstraksi Karyawan, bukan pada kelas konkret Staff atau Manager. Penanggung jawab diberikan dari luar lewat constructor (dependency injection), sehingga Ruangan bisa menerima jenis karyawan apa pun tanpa diubah.
+1. Open/Closed Principle (OCP), adalah Kelas harus terbuka untuk ditambah (open for extension), tetapi tertutup untuk diubah(closed for modification). Artinya, fitur baru ditambahkan dengan membuat kelas baru,
+bukan dengan membongkar kode lama yang sudah berjalan dan sudah diuji. Kelas Magang ditambahkan sebagai subclass baru tanpa mengubah kode Karyawan, Ruangan, maupun loop penggajian di file utama. Karena semua kode lama bergantung pada method hitung_gaji() dan info(), objek Magang langsung bisa dipakai di loop slip gaji dan sebagai penanggung jawab ruangan.
+2. Dependency Inversion Principle (DIP), yaitu Kelas tingkat tinggi tidak boleh bergantung langsung pada kelas tingkat rendah. Keduanya harus bergantung pada abstraksi. Kelas Ruangan bergantung pada abstraksi Karyawan, bukan pada kelas konkret Staff atau Manager. Penanggung jawab diberikan dari luar lewat constructor (dependency injection), sehingga Ruangan bisa menerima jenis karyawan apa pun tanpa diubah.
 
 N. Relasi UML
 <img width="912" height="684" alt="DiagramRelasi drawio" src="https://github.com/user-attachments/assets/23197565-f175-4fbb-8803-bb5a52dcf83d" />
@@ -303,3 +305,28 @@ Diagram memperlihatkan tiga relasi yang wajib beserta pewarisan. Ketiga relasi b
 Perbedaan agregasi dan komposisi terletak pada siapa yang membuat objek bagian dan apakah bagian itu bisa hidup sendiri. Pada agregasi, bagian dibuat di luar dan tetap hidup mandiri. Pada komposisi, bagian dibuat oleh induknya dan tidak berdiri sendiri.
 
 4. Pewarisan: dari Staff, Manager, dan Magang ke Karyawan Ketiga subclass mewarisi kelas abstrak Karyawan dan meng-override hitung_gaji() dan info().
+
+O. Screenshot Output Program
+1. Getter, Method tambah_stok(), kurangi_stok(), dan info() di barang_inventaris
+<img width="418" height="405" alt="getter- -jumlah-stok-barang-inventaris" src="https://github.com/user-attachments/assets/dc1b7445-713b-45f8-a659-c763ee51864c" />
+2. Validasi Nilai barang_inventaris
+<img width="592" height="331" alt="validasi-nilai-brang-inventaris" src="https://github.com/user-attachments/assets/3428ff42-e267-4cee-b979-abafb38a1d27" />
+3. Bukti abstract class tidak bisa diinstansiasi
+<img width="1090" height="77" alt="bukti-abstraksi" src="https://github.com/user-attachments/assets/6aa2b2bb-5185-4c55-9232-c648d150e0df" />
+4. Pewarisan Class Karyawan
+<img width="547" height="345" alt="inheritance-karyawan" src="https://github.com/user-attachments/assets/e25ee90e-7a23-4cb1-bc10-8853d718a5c7" />
+5. Polimorfisme pada Karyawan
+<img width="572" height="305" alt="polimorfisme-karyawan" src="https://github.com/user-attachments/assets/83d54c2f-1613-4854-8055-d7b4d14f077f" />
+6. Operator Overriding __lt__
+<img width="596" height="191" alt="overriding" src="https://github.com/user-attachments/assets/0914a0f0-edfe-47dd-8307-eed3a1d36764" />
+7. Getter dan Validasi Nilai di Karyawan
+<img width="598" height="405" alt="getter-dan-validasi-karyawan" src="https://github.com/user-attachments/assets/2a2706ce-fd28-4eed-a9ed-02ccda0a3a5f" />
+8. Getter dan Method di Ruangan
+<img width="756" height="285" alt="getter-dan-method-ruangan" src="https://github.com/user-attachments/assets/7f901ea2-b953-43c7-aabd-ba8a3cf4c16d" />
+9. Validasi Nilai di Ruangan
+<img width="670" height="322" alt="validasi-nilai-ruangan" src="https://github.com/user-attachments/assets/5956f4bd-d956-4a80-80bd-d74800d55195" />
+10. Duck Typing
+<img width="758" height="117" alt="duck-typing" src="https://github.com/user-attachments/assets/232a8271-6d6f-40fb-ae3f-163ed4c3e074" />
+11. SOLID OCP dan DIP
+<img width="720" height="88" alt="output-prinsip-solid" src="https://github.com/user-attachments/assets/9858c9aa-9467-4923-934f-45ba4957a314" />
+
