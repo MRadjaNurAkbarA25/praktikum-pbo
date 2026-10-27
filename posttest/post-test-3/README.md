@@ -23,21 +23,19 @@ posttest/post-test-3/
     ├── magang.py              ← Magang
     └── ruangan.py             ← Ruangan
 
-    Dalam laporan ini, saya akan menjelaskan setiap file, mulai dari yang baru hingga perubahan apa yang terjadi pada file sejak posttest kedua.
+Dalam laporan ini, saya akan menjelaskan setiap file, mulai dari yang baru hingga perubahan apa yang terjadi pada file sejak posttest kedua.
 
 A. File __init__.py
-    File ini tidak punya fungsi atau kelas. Tugasnya menjadikan folder models sebuah package Python dan mengumpulkan semua kelas, sehingga file utama cukup menulis from models import Staff, Ruangan, rupiah.
-    Pada baris:
+    File ini tidak punya fungsi atau kelas. Tugasnya menjadikan folder models sebuah package Python dan mengumpulkan semua kelas, sehingga file utama cukup menulis from models import Staff, Ruangan, rupiah. Pada baris:
     
-    from .utils import rupiah
+from .utils import rupiah
 
     Titik mengacu pada folder models itu sendiri. Hanya mengimpor rupiah karena fungsi lain pada .utils hanya dipakai di dalam kelas. Sementara itu, baris-baris seterusnya mengimpor kelas-kelas lain. Jika menggunakan asterisks (*) atau mengimpor semua yang ada di models, daftar nama di dalam __all__ akan terikut.
 
 B. File utils.py
-    File ini berisi fungsi pembantu, 2 diantara 3 fungsi merupakan fungsi validasi yang dipakai di setiap setter. Jadi tidak perlu menulis validasi yang sama terus-menerus.
-    Fungsi cek_bulat() memastikan suatu nilai merupakan bilangan bulat dan tidak negatif. Digunakan untuk menjaga angka adalah bulat dalam operasi matematika dan lain-lain.
+    File ini berisi fungsi pembantu, 2 diantara 3 fungsi merupakan fungsi validasi yang dipakai di setiap setter. Jadi tidak perlu menulis validasi yang sama terus-menerus. Fungsi cek_bulat() memastikan suatu nilai merupakan bilangan bulat dan tidak negatif. Digunakan untuk menjaga angka adalah bulat dalam operasi matematika dan lain-lain.
 
-    def cek_bulat(nilai, label):
+def cek_bulat(nilai, label):
     # bool adalah turunan int (True == 1), jadi ditolak secara eksplisit
     if not isinstance(nilai, int) or isinstance(nilai, bool) or nilai < 0:
         raise ValueError(f'{label} harus bilangan bulat dan tidak boleh negatif!')
