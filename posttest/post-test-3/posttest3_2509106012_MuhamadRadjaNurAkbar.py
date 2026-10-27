@@ -260,3 +260,12 @@ print('===== DUCK TYPING =====')
 print('Satu fungsi tampilkan_info() untuk objek dari kelas yang tidak berhubungan')
 for objek in [b2, r2, m1]:
     tampilkan_info(objek)
+    
+print()
+
+# PERUBAHAN (BARU) - bukti penerapan SOLID
+print('===== SOLID =====')
+print('OCP: Magang ditambahkan tanpa mengubah Karyawan, Ruangan, dan loop gaji')
+total = sum(k.hitung_gaji() for k in daftar_karyawan)
+print(f'Total gaji semua karyawan (termasuk Magang): {rupiah(total)}')
+print(f'DIP: penanggung jawab {r1.nama} adalah {r1.penanggung_jawab.nama}, diterima lewat abstraksi Karyawan')
